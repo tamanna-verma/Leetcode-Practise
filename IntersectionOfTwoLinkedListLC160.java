@@ -23,6 +23,7 @@ public class Solution {
             if (second == null)
                 second = headA;
         }
+        
         return first;
     }
 }
