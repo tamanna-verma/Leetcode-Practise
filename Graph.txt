@@ -1,0 +1,80 @@
+In order to solve any Graph problems , we must know graph tarversal techniques 
+
+1-based indexing or 0-based indexing - just make sure to write code accordingly 
+
+1.BFS - breadth (level wise traversal)
+
+Undirected Graph
+If starting node is told - level 0 , its attached neighbour - level 1 , then level 2
+We take a queue data structure , and it will always contain the starting node , and create a visited array 
+if index starts from 1 , and there are 9 nodes , created boolean visited array of size 10 
+
+create an adjacency list 
+remove an element from queue and mark it visited and put its neighbour in queue 
+
+we can also get distance using bfs , if we keep track of levels using a variable
+
+Directed Graph - the same approach can work for a directed graph as well
+TC = O(N) for while queue is not empty + O(2E) - twice of edges
+
+2.DFS - traversing in depth - recursion and updating the dfs result 
+store in a adj. list and maintain a visited array 
+
+
+add a node in result list do recursion on it neighbours if not in visited 
+SC - N nodes in result 
+     N for visited 
+     N stack space for skewed graph  -  o(N)
+
+tc = summation of degree  = O(N)+ O(2E) for undirected graph
+
+3. Deteting a cycle in undirected graph 
+
+Using BFS - start from a node , traverse all neighbours , if you come back to same node then you have a cycle 
+but in an unirected graph , how do we detected if its the source node or there is a cycle 
+Create a adj list 
+
+have a queue of pair (node,source of node)
+put first node in queue along with where it came from , 
+remove from queue , make node as visited , put it neighbours in queue along with removed node to know where it came from
+if someone is visted and is not source , it means its a cycle 
+
+what if graph is broken into multiple components - have a loop over number of node , if those nodes are not visited then take it as a start 
+S.C -2o(n) - queue + visited
+t.c - we visit all adj nodes 1 by 1 = ALL DEGREE - O(2E)+o(N)
+
+Using DFS - 
+create adj list 
+
+for all nodes if not visited , start a dfs , 
+go to each node , pass its source as well , start all the neighbours dfs other than source , 
+in dfs mark the node visited
+
+4.BIPARTITE GRAPH  - if we are able to colour a graph with 2 colours such that no 2 adj nodes have same colour , its a bipartite graph 
+we can always colour a graph thats linear 
+
+any graph with even cycle length can also be bipartite 
+
+put first node in queue , assign it a colour , thats the start 
+start to iterate on queue , get the neighbours , check if neigh are coloured or not , if it has it should have opposite colour , if not put opposite colour and add in queue 
+if neigh has same colour return false 
+
+S.C -2o(n) - queue + visited
+t.c - we visit all adj nodes 1 by 1 = ALL DEGREE - O(2E)+o(N)
+
+DFS 
+pass first node , first colour in dfs recursion function alogn with a visited array 
+
+check if neigh is visited and has a same colour return false 
+if not coloured , make a dfs call for all neighbours 
+
+5.Detect Cycle in Directed Graph 
+
+This is different - dont simply check if this node was visited previously , check if it was visited in the same path previously 
+to have a check of visited in same path , in case of dfs while backtracking remove from path visited 
+
+when you do dfs of a node , mark node as visited and path visited but when you go back from that node , mark path visited as false in dfs function 
+
+6.Topological Sort - check if its directed acyclic graph - courses schedule 
+Create adj list , calculate indegree
+Put all with indegree 0 in queue , remove from queue , put neighbours in queue 
