@@ -1,4 +1,4 @@
-In order to solve any Graph problems , we must know graph tarversal techniques 
+In order to solve any Graph problems , we must know graph traversal techniques 
 
 1-based indexing or 0-based indexing - just make sure to write code accordingly 
 
@@ -70,11 +70,159 @@ if not coloured , make a dfs call for all neighbours
 
 5.Detect Cycle in Directed Graph 
 
+Using DFS
 This is different - dont simply check if this node was visited previously , check if it was visited in the same path previously 
 to have a check of visited in same path , in case of dfs while backtracking remove from path visited 
 
 when you do dfs of a node , mark node as visited and path visited but when you go back from that node , mark path visited as false in dfs function 
 
-6.Topological Sort - check if its directed acyclic graph - courses schedule 
-Create adj list , calculate indegree
-Put all with indegree 0 in queue , remove from queue , put neighbours in queue 
+Using BFS
+TOPOSORT only applicable on dag
+
+still try to find toposort for this graph that has cycle 
+put element in queue whose indegree is 0 , 
+
+.. put all neigh elements who indegree becomes 0 .. we will see if its a cyclic graph ,
+while queue is not empty
+all the elements cant have indegree 0 at some point or other 
+whenever we remove something from queue , maintain a count , if the count is != no of nodes 
+then its a cyclic graph
+
+6.Topological Sort - if there is an edge between u and v , then u appears before v 
+
+check if its directed acyclic graph -  only works on dag - courses schedule 
+Create adj list , calculate indegree in an indegree array
+Put all with indegree 0 in queue  so we can place them in starting of linear ordering ,
+remove from queue , check neighbours , subtract the indegree
+
+DFS - 
+traverse from 0 to n , go to its children by dfs , mark visited , if  a node has no further children put into stack ,mark visited , go to their neighbours , and when done with all further neighbour , mark visited, put into stack 
+pop everything from stack until empty
+
+BFS - Kahn's algo - find indegree of all nodes, put in queue with indegree 0 
+
+7.Shortest Path from source to all nodes In Directed Acyclic Weighted Graph -  do Topological Sort on graph , and relax the edges 
+Using DFS 
+Traverse of all node , if not visited , call dfs of i 
+whenever we complete the dfs of a particular node , we put it into stack 
+once we have all nodes in stack now relax the edges 
+
+relax edge - take node out from stack , check its neigh and update the distance array 
+
+8.Shortest Path in Undirected Graph having Unit weights - Simple bfs with pair(node , distance) stored in queue 
+and keep updating the distance array 
+
+9.Dijkstra Algorithm - shortest path from source to all nodes in undirected weighted graph 
+
+represent the graph in form of adj list , add pairs in graph 
+we will use pq in dijkstra algo 
+we will stora pair of (distance , node) in the pq , 
+
+the shorter distance will be selected 
+put(0,source) in min pq 
+remove node from pq , go to its neigh , if better path discovered , put in pq and distance array 
+
+- doesnt work with negative weight cycle
+- doesnt work with negative weight 
+imagine 0<-->1 weight is -2
+
+we always take a pq 
+0 to 0 = 0
+0 to 1 = -2 add in pq  1,-2
+1 to 0 = -2+-2 = -4 so add in pq 
+0 to 1 = -4+-2=-6
+
+
+it will be an infinite loop where distance keep on decreasing 
+Thats why any graph with negative weights cant implement dijkstra
+
+
+even if we take a queue , we get the answer , so why pq
+why pq and not q ? = more time consuming - all path will be considered ,
+ not only minimum distance once
+ queue is brute force, unnecessary exploration of all path , using pq is a greedy way 
+How is tc of dijkstra is T.C = E log v ?
+
+while pq not empty = v = no of nodes 
+top of pq = log of heap size 
+now each node has some edges connected , check for all of them 
+considering all nodes connected to all other nodes  = ne = no of edges
+
+push in pq = log of heap size
+
+o(v*(pop from pq(log h) + (no of connected edges (no of edges)* log h ))- take log h common
+o(v*(logh * (v-1 +1 ))); 
+o(v*(logh*v))
+o(v^2* logh) = h= heap size , whats h - in worst case if n nodes connected to all n nodes - n^2
+v^2logv^2 = v^2(2logv) 
+
+v^2 edges = total no.of edges 
+
+10.Bellman ford = shortest path from source to all other nodes of graph with -ve weight cycle
+helps to detect -ve cycle as well 
+applicable in only directed graph 
+so make undirected as directed by making distance from a-b = d , b-a= d
+
+In Bellman ford , relax all edges sequentially n-1 times 
+Relax = in distance array , if dist[u]+ wt < dist [v], then we got a better guy for dist[v]
+
+keep source distance = 0
+why n-1 iteration = in worst case, in each iteration , we get a better answer , for source we already had 
+
+after n-1 cycle also , if distance is reduced , then negative cycle 
+Time complexity = n-1 times we relax all edges  = n* e = v*e 
+Space complexity = distance array = o(v)
+
+11.Floyd warshall Algorithm - from every node we need to tell the shortest path to every other node 
+Multi source shortest path algorithm 
+helps to detect negative cycles as well 
+
+if we want to go from 0 - >1 
+go to 1 via every other node 
+
+0-  > 2 - > 1
+0-  > 3 - > 1
+0-  > 4 - > 1
+0-  > 5 - > 1
+0-  > 6 - > 1
+
+we are using already solved smaller solution to solve a new problem 
+so this is a type of dp we are using 
+
+Here we will store the graph in adj matrix instead of adj list 
+if undirected graph put 0-5 as distance and 5-0 as distance - simple
+
+traverse every path in matrix via every node 
+
+first 0-0 0-1 0-2 ....2-3 .. 6-6 via 0 
+t.c= v^3
+how to detect a negative cycle - the cost from any node to itself shouldnt be less than 0 
+
+12.MST - Minimum spanning tree - a spanning tree where we have n nodes , n-1 edges and all notes should be reachable from one another
+
+but a minimum spanning tree is n nodes connected with n-1 edges with minimum total weight
+
+12.1 Prims algorithm to find mst 
+we will have a pq , with pair(weight , node , parent) ,
+a visited array []
+a MST []
+
+start from source , put in pq , pair(0,0,-1) = distance , node , parent
+remove source from source - mark as visited , put its neighbour in pq 
+
+now remove top element with least distance from pq , mark as visited , put that edge in mst
+
+WHEN YOU REMOVE ,IF NOT MARKED AS VISITED MARK AS VISITED AND PUT IN MST , NOT WHEN YOU PUT IN PQ 
+
+if someone is asking for mst as result , store parent in pq , otherwise just wt , node in pq
+tc = e loge
+
+12.2 Kruskal Algorithm 
+
+13 DSU
+to check if 2 nodes belogn to the same component or not 
+
+we have 2 functions - findParent() and do union - Union() - union is done by rank and by size 
+graph is changing at every step
+
+Union by rank - maintain a rank array and a parent array 
