@@ -1,7 +1,7 @@
 class Solution {
     boolean visited[];
     public int findCircleNum(int[][] isConnected) {
-        int n = isConnected.length;
+    int n = isConnected.length;
        visited = new boolean[n];
        int count=0;
         for(int i=0;i<n;i++){
