@@ -18,6 +18,7 @@ class Solution {
 }
 // jitne nodes pe koi incoming edge nhi hai i.e jinke indegree 0 hai , those are the nodes jitne minimum nodes we need to visit all nodes
 
+
 // minimum cost to reach = bfs 
 // minimum no of edges = mst = 
 // topological sort = indegree 
